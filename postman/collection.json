@@ -1,0 +1,342 @@
+{
+  "info": {
+    "name": "REST API Integration",
+    "description": "Collection for testing REST API data ingestion and retrieval endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Ingest",
+      "item": [
+        {
+          "name": "POST single record",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/data",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": \"rec-001\", \"type\": \"sensor\", \"data\": {\"temperature\": 23.5, \"unit\": \"celsius\"}}"
+            }
+          }
+        },
+        {
+          "name": "POST single record - missing id",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/data",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"type\": \"sensor\", \"data\": {}}"
+            }
+          }
+        },
+        {
+          "name": "POST single record - missing type",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/data",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": \"rec-001\", \"data\": {}}"
+            }
+          }
+        },
+        {
+          "name": "POST single record - duplicate",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/data",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": \"rec-001\", \"type\": \"sensor\", \"data\": {}}"
+            }
+          }
+        },
+        {
+          "name": "POST single record - invalid id type",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/data",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": 123, \"type\": \"sensor\", \"data\": {}}"
+            }
+          }
+        },
+        {
+          "name": "POST batch records",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/batch",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"records\": [{\"id\": \"b-001\", \"type\": \"event\", \"data\": {\"name\": \"click\"}}, {\"id\": \"b-002\", \"type\": \"event\", \"data\": {\"name\": \"scroll\"}}]}"
+            }
+          }
+        },
+        {
+          "name": "POST batch - empty array",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/batch",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"records\": []}"
+            }
+          }
+        },
+        {
+          "name": "POST batch - missing records field",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/batch",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"items\": []}"
+            }
+          }
+        },
+        {
+          "name": "POST batch - records not array",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/batch",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"records\": \"not-an-array\"}"
+            }
+          }
+        },
+        {
+          "name": "POST batch - duplicate in batch",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/batch",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"records\": [{\"id\": \"rec-001\", \"type\": \"sensor\", \"data\": {}}]}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Retrieve",
+      "item": [
+        {
+          "name": "GET all records",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/data"
+          }
+        },
+        {
+          "name": "GET all records - filter by type",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/data?type=sensor",
+              "query": [{"key": "type", "value": "sensor"}]
+            }
+          }
+        },
+        {
+          "name": "GET all records - filter nonexistent type",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/data?type=nonexistent",
+              "query": [{"key": "type", "value": "nonexistent"}]
+            }
+          }
+        },
+        {
+          "name": "GET record by ID - found",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/data/rec-001"
+          }
+        },
+        {
+          "name": "GET record by ID - not found",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/data/does-not-exist"
+          }
+        },
+        {
+          "name": "GET stats",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/stats"
+          }
+        },
+        {
+          "name": "GET stats - after ingestion",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/stats"
+          }
+        },
+        {
+          "name": "GET all records - empty store",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/data"
+          }
+        },
+        {
+          "name": "GET unknown route - 404",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/nonexistent"
+          }
+        },
+        {
+          "name": "GET health check",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Format",
+      "item": [
+        {
+          "name": "Validate 400 has error + details",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/data",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"type\": \"event\"}"
+            }
+          }
+        },
+        {
+          "name": "Validate 404 has error + message",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/data/unknown"
+          }
+        },
+        {
+          "name": "Validate 409 has error + message",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/data",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": \"rec-001\", \"type\": \"dup\", \"data\": {}}"
+            }
+          }
+        },
+        {
+          "name": "Validate invalid timestamp",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/data",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": \"ts-1\", \"type\": \"event\", \"data\": {}, \"timestamp\": \"not-a-date\"}"
+            }
+          }
+        },
+        {
+          "name": "Validate batch record with missing type",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/batch",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"records\": [{\"id\": \"missing-type\", \"data\": {}}]}"
+            }
+          }
+        },
+        {
+          "name": "Validate type not string in batch",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/batch",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"records\": [{\"id\": \"num-type\", \"type\": 42, \"data\": {}}]}"
+            }
+          }
+        },
+        {
+          "name": "POST valid record with timestamp",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/data",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": \"ts-valid\", \"type\": \"log\", \"data\": {\"msg\": \"test\"}, \"timestamp\": \"2024-01-15T10:30:00Z\"}"
+            }
+          }
+        },
+        {
+          "name": "POST large batch",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/batch",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"records\": [{\"id\": \"lg-1\", \"type\": \"metric\", \"data\": {\"v\": 1}}, {\"id\": \"lg-2\", \"type\": \"metric\", \"data\": {\"v\": 2}}, {\"id\": \"lg-3\", \"type\": \"metric\", \"data\": {\"v\": 3}}]}"
+            }
+          }
+        },
+        {
+          "name": "GET stats after large batch",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/stats"
+          }
+        },
+        {
+          "name": "GET filter after large batch",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/data?type=metric",
+              "query": [{"key": "type", "value": "metric"}]
+            }
+          }
+        },
+        {
+          "name": "GET record after ingestion",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/data/lg-1"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3003",
+      "type": "string"
+    }
+  ]
+}
