@@ -321,13 +321,6 @@
               "query": [{"key": "type", "value": "metric"}]
             }
           }
-        },
-        {
-          "name": "GET record after ingestion",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/data/lg-1"
-          }
         }
       ]
     }
