@@ -323,6 +323,68 @@
           }
         }
       ]
+    },
+    {
+      "name": "Manage",
+      "item": [
+        {
+          "name": "PATCH update record",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/data/rec-001",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"type\": \"updated-sensor\", \"data\": {\"temperature\": 25.0}}"
+            }
+          }
+        },
+        {
+          "name": "PATCH update record - not found",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/data/nonexistent",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"type\": \"x\"}"
+            }
+          }
+        },
+        {
+          "name": "PATCH update record - change id rejected",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/data/rec-001",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": \"new-id\"}"
+            }
+          }
+        },
+        {
+          "name": "DELETE record",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/data/rec-001"
+          }
+        },
+        {
+          "name": "DELETE record - not found",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/data/nonexistent"
+          }
+        },
+        {
+          "name": "DELETE record - verify removed",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/data/rec-001"
+          }
+        }
+      ]
     }
   ],
   "variable": [

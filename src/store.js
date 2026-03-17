@@ -41,6 +41,10 @@ class DataStore {
     };
   }
 
+  delete(id) {
+    this.data.delete(id);
+  }
+
   clear() {
     this.data.clear();
   }

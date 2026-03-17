@@ -328,3 +328,71 @@ describe('Error response format', () => {
     expect(res.body).toHaveProperty('error');
   });
 });
+
+// ============================================================
+// 7. PATCH /api/data/:id — update record (3 tests)
+// ============================================================
+
+describe('PATCH /api/data/:id', () => {
+  beforeEach(async () => {
+    await request(app).post('/api/data').send({ id: 'patch-1', type: 'sensor', data: { v: 1 } });
+  });
+
+  test('updates an existing record', async () => {
+    const res = await request(app)
+      .patch('/api/data/patch-1')
+      .send({ type: 'updated-sensor', data: { v: 99 } });
+
+    expect(res.status).toBe(200);
+    expect(res.body.record.type).toBe('updated-sensor');
+    expect(res.body.record.id).toBe('patch-1');
+  });
+
+  test('returns 404 for non-existent record', async () => {
+    const res = await request(app)
+      .patch('/api/data/does-not-exist')
+      .send({ type: 'x' });
+
+    expect(res.status).toBe(404);
+    expect(res.body.error).toBe('Not found');
+  });
+
+  test('cannot change record id', async () => {
+    const res = await request(app)
+      .patch('/api/data/patch-1')
+      .send({ id: 'different-id' });
+
+    expect(res.status).toBe(400);
+  });
+});
+
+// ============================================================
+// 8. DELETE /api/data/:id — remove record (3 tests)
+// ============================================================
+
+describe('DELETE /api/data/:id', () => {
+  beforeEach(async () => {
+    await request(app).post('/api/data').send({ id: 'del-1', type: 'event', data: {} });
+  });
+
+  test('deletes an existing record', async () => {
+    const res = await request(app).delete('/api/data/del-1');
+
+    expect(res.status).toBe(200);
+    expect(res.body.message).toBeDefined();
+    expect(res.body.id).toBe('del-1');
+  });
+
+  test('returns 404 for non-existent record', async () => {
+    const res = await request(app).delete('/api/data/ghost-record');
+
+    expect(res.status).toBe(404);
+    expect(res.body.error).toBe('Not found');
+  });
+
+  test('record is actually removed from store', async () => {
+    await request(app).delete('/api/data/del-1');
+    const res = await request(app).get('/api/data/del-1');
+    expect(res.status).toBe(404);
+  });
+});

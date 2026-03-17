@@ -1,5 +1,7 @@
 # REST API Integration
 
+![CI](https://github.com/matingathani/rest-api-integration/actions/workflows/ci.yml/badge.svg)
+
 A REST API for data ingestion and retrieval with comprehensive validation, structured error responses, and 30 test cases.
 
 ## Features
@@ -20,6 +22,8 @@ A REST API for data ingestion and retrieval with comprehensive validation, struc
 | GET | /api/data | Retrieve all records (optional `?type=` filter) |
 | GET | /api/data/:id | Retrieve record by ID |
 | GET | /api/stats | Aggregated stats (count by type, total) |
+| PATCH | /api/data/:id | Update record by ID |
+| DELETE | /api/data/:id | Delete record by ID |
 
 ## Quick Start
 
